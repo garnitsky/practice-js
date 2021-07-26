@@ -9,6 +9,21 @@ const forms = () => {
         failure: 'Что-то пошло не так'
     };
 
+    const postData = async(url, data) => {
+        document.querySelector('.status').textContent = message.loading;
+        let res = await fetch(url, {
+            method: "POST",
+            body: data,
+        });
+        return await res.text();
+    };
+
+    const clearInputs = () => {
+        input.forEach(item => {
+            item.value = "";
+        });
+    };
+
     form.forEach(item => {
         item.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -16,6 +31,19 @@ const forms = () => {
             statusMessage.classList.add('status');
             item.appendChild(statusMessage);
 
+            const formData = new FormData(item);
+            postData('assets/server.php', formData)
+                .then(res => {
+                    console.log(res);
+                    statusMessage.textContent = message.success;
+                }).catch(() =>
+                    statusMessage.textContent = message.failure)
+                .finally(() => {
+                    clearInputs();
+                    setTimeout(() => {
+                        statusMessage.remove();
+                    }, 5000);
+                });
         });
     });
 
