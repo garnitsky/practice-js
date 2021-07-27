@@ -1,7 +1,14 @@
 const forms = () => {
 
     const form = document.querySelectorAll('form'),
-        input = document.querySelectorAll('input');
+        inputs = document.querySelectorAll('input'),
+        phoneInputs = document.querySelectorAll('input[name="user_phone"]');
+
+    phoneInputs.forEach(item => {
+        item.addEventListener('input', () => {
+            item.value = item.value.replace(/\D/, '');
+        });
+    });
 
     const message = {
         loading: 'Загрузка',
@@ -13,14 +20,14 @@ const forms = () => {
         document.querySelector('.status').textContent = message.loading;
         let res = await fetch(url, {
             method: "POST",
-            body: data,
+            body: data
         });
         return await res.text();
     };
 
     const clearInputs = () => {
-        input.forEach(item => {
-            item.value = "";
+        inputs.forEach(item => {
+            item.value = '';
         });
     };
 
@@ -35,7 +42,7 @@ const forms = () => {
             postData('assets/server.php', formData)
                 .then(res => {
                     console.log(res);
-                    statusMessage.textContent = message.success;
+                    statusMessage.textContent = message.sucses;
                 }).catch(() =>
                     statusMessage.textContent = message.failure)
                 .finally(() => {
